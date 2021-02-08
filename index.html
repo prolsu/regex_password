@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.js"
+        integrity="sha256-DrT5NfxfbHvMHux31Lkhxg42LY6of8TaYyK50jnxRnM=" crossorigin="anonymous"></script>
+    <title>Regex: Password Strength</title>
+    <style>
+        body,
+        html {
+            background-color: rgb(41, 37, 37);
+            color: whitesmoke;
+        }
+
+        .title,
+        .subtitle {
+            color: whitesmoke;
+        }
+
+        img {
+            max-width: 20px;
+            max-height: 20px;
+        }
+        span {
+            font-style: italic;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="columns is-centered">
+            <div class="column is-half">
+                <div class="column">
+                    <h1 class="title">Test the strength of your password</h1>
+                    <div class="column">
+                        <form class="columns" id="check">
+                            <div class="column is-6">
+                                <input class="input is-medium" type="text" id="password" placeholder="password">
+                            </div>
+                            <div class="column is-6">
+                                <button id="checkbtn" class="button is-medium">Check</button>
+                            </div>
+                        </form>
+                        <div class="column">
+                            <li class="subtitle" id="lower">lowercase: </li>
+                            <li class="subtitle" id="upper">uppercase: </li>
+                            <li class="subtitle" id="special">special characters: </li>
+                            <li class="subtitle" id="number">numbers: </li>
+                            <li class="subtitle" id="min">minimum: </li>
+                        </div>
+                        <div class="column" id="passcheck">
+                            <!--  -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    $(document).ready(() => {
+
+        $(document).on("submit", "#check", checkWithRegex);
+        $(document).on("click", "#retry", retrypasschecker);
+
+        function checkWithRegex(event) {
+
+            event.preventDefault();
+
+            const regex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\!@#$%^&*()\\[\]{}\-_+=~`|:;"'<>,./?])(?=.{8,})/;
+
+            const password = $("#password").val().trim();
+
+            const criteria = [$("#lower"), $("#upper"), $("#special"), $("#number"), $("#min")];
+
+            const regexPortions = [/(?=.*[a-z])/, /(?=.*[A-Z])/, /(?=.*[\!@#$%^&*()\\[\]{}\-_+=~`|:;"'<>,./?])/, /(?=.*\d)/, /(?=.{8,})/];
+
+            const checked = ` <img src="./pics/check.png">`;
+            const failed = ` <img src="./pics/fail.png">`;
+
+            for (let i = 0; i < regexPortions.length; i++) {
+                if (password.match(regexPortions[i])) {
+                    criteria[i].append(checked);
+                } else {
+                    criteria[i].append(failed)
+                }
+            }
+
+            if (password.match(regex)) {
+                $("#passcheck").append(`<h1 class="subtitle">Your password <span>'${password}'</span> is legendary!</h1>`);
+            } else if (password != "") {
+                $("#passcheck").append(`<h1 class="subtitle">Your password <span>'${password}'</span> is too weak :(</h1>`);
+            }
+
+            $("#passcheck").append(`<button id="retry" class="button is-medium">Check Again</button>`);
+
+            $("#password").attr("disabled", true);
+            $("#checkbtn").attr("disabled", true);
+
+            clearInput();
+        }
+
+        function clearInput() {
+            $("#password").val("");
+        }
+
+        function retrypasschecker() {
+            window.location.reload();
+        }
+        
+    });
+</script>
+
+</html>
