@@ -1,0 +1,19 @@
+body,
+html {
+    background-color: rgb(41, 37, 37);
+    color: whitesmoke;
+}
+
+.title,
+.subtitle {
+    color: whitesmoke;
+}
+
+img {
+    max-width: 20px;
+    max-height: 20px;
+}
+
+span {
+    font-style: italic;
+}
